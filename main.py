@@ -2,6 +2,8 @@ from fastapi import FastAPI
 from pydantic import BaseModel, validator
 from enum import Enum
 from typing import List
+import redis
+import json
 
 class OrderStatus(str, Enum):
     completed = "completed"
@@ -34,11 +36,18 @@ class Order(BaseModel):
         return v
 
 app = FastAPI()
+cache = redis.Redis("redis://red-ch68l9ik728iqr6l0kh0:6379")
 
 @app.post("/solution")
 async def process_orders(orders: List[Order], criterion: OrderStatus):
     # my guess is total revenue should be like this, not just making a sum with orders prices
     # that's why test units should not give the expected response as the sample request you
     # provided, so i'm assuming this approach
+    cache_key = json.dumps({'orders': [order.dict() for order in orders], 'criterion': criterion})
+    result = cache.get(cache_key)
+    if result:
+        return json.loads(result)
     total = sum([order.price*order.quantity for order in orders if order.status == criterion])
-    return {"total": total}
+    result = {"total": total}
+    cache.set(cache_key, json.dumps(result))
+    return result
