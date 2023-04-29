@@ -1,0 +1,6 @@
+services:
+  - name: web
+    dockerfile: Dockerfile
+    internal_port: 80
+    ports:
+      - 80:80
