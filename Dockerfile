@@ -22,7 +22,7 @@ RUN /bin/bash -c 'source /home/app/env/bin/activate'
 COPY . /home/app
 
 # install requirements
-RUN pip install -r requirements/base.txt
+RUN pip install -r requirements.txt
 
 # expose port
 EXPOSE 8000
