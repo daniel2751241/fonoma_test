@@ -37,7 +37,7 @@ class Order(BaseModel):
         return v
 
 app = FastAPI()
-cache = redis.Redis(os.getenv("REDIS_URI"))
+cache = redis.Redis.from_url(os.getenv("REDIS_URI"))
 
 @app.post("/solution")
 async def process_orders(orders: List[Order], criterion: OrderStatus):
