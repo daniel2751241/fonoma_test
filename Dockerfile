@@ -11,7 +11,7 @@ COPY . /home/app
 RUN pip install -r requirements.txt
 
 # Expose the port that the app will listen on
-# EXPOSE 80
+EXPOSE 80
 
 # Start the FastAPI app
 ENTRYPOINT ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80"]
